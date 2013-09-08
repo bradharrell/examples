@@ -1,0 +1,108 @@
+FRONT-END Validation
+
+
+
+
+
+
+
+var validate_arr = [
+['fullname', /^[a-zA-Z]|[\t]+$/i],
+['email', /^[-a-zA-Z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9],{1,5})?$/],
+['phone',  /^[0-9-.]+$/]
+
+];
+
+function validate_field(fieldname){
+var field = document.forms['f2'].elements[fieldname];
+for(var i = 0; i < validate_arr.length; i++){
+if(validate_arr[i][0] !== fieldname){continue;}
+else{
+if(validate_arr[i][1].test(field.value)){
+document.getElementById(fieldname).style.background = "#fff url('images/check.gif') right no-repeat";
+return true;
+}
+else{
+document.getElementById(fieldname).style.background = "#fff url('images/x.gif') right no-repeat";
+return false;
+}
+break;
+}
+}
+}
+
+function init_form(){
+var fields = document.forms['f2'].elements;
+for(var k = 0; k < fields.length; k++){
+if((!fields[k].className) || (fields[k].className !== 'inputField')){continue;}
+else{fields[k].onchange = function(){validate_field(this.name);}}
+}
+document.forms['f2'].onreset = function(){
+for(var n = 0; n < fields.length; n++){
+if((!fields[n].className) || (fields[n].className !== 'inputField')){continue;}
+else{fields[n].style.backgroundColor = '#fff';}
+}
+document.getElementById(fieldname).style.display="block";
+}
+
+
+
+
+}
+
+function validate_all(){
+      var is_valid = false;
+      var fields = document.forms['f2'].elements;
+      for(var k = 0; k < fields.length; k++){
+      if((!fields[k].className) || (fields[k].className !== 'inputField')){continue;}
+      else{
+      is_valid = validate_field(fields[k].name);
+      if(is_valid !== true){alert('There are fields with invalid values'); return;}
+      }
+      }
+      if(is_valid == true){
+
+
+          var name = $("input#fname").val();  
+
+            var email = $("input#em").val();  
+
+            var phone = $("input#ph").val();  
+
+   
+      var dataString = 'fullname='+ name + '&email=' + email + '&phone=' + phone;  
+    //alert (dataString);return false;  
+    $.ajax({  
+      type: "POST",  
+      url: "verify.php",  
+      data: dataString,  
+      success: function() {  
+        
+        $('#message').html("<div id='msgContainer'><div><span id='msgContent'>We appreciate that you chose HomePath Lenders Group. A specialist will be in touch within 24 hours of this submission to determine if you qualify.</span><span id='msgInfo'>Email: info@homepathlendersgroup.com<br />Phone: 1-800-456-8899</span></div></div>")  
+        .hide()  
+        $('#message').show(1, function() {
+          $('#message').delay(4000).fadeOut(800);
+        });
+        document.f2.fullname.value='';
+        document.f2.email.value='';
+        document.f2.phone.value='';
+        document.getElementById('fullname').style.background="";
+        document.getElementById('email').style.background="";
+        document.getElementById('phone').style.background="";
+        
+
+      }  
+    });  
+    return false;
+
+          
+
+      }
+      else{alert('There are fields with invalid values'); return;}
+}
+
+
+
+
+
+window.onload = init_form;
