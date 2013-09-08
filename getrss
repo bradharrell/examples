@@ -1,0 +1,50 @@
+GETRSS.PHP
+
+
+<?php
+//get the q parameter from URL
+$q=$_GET["q"];
+
+//find out which feed was selected
+if($q=="goStream")
+  {
+  $xml=("http://www.homepathlendersgroup.com/rss/homepathlendersgroup.rss");
+  }
+
+
+$xmlDoc = new DOMDocument();
+$xmlDoc->load($xml);
+
+//get elements from "<channel>"
+$channel=$xmlDoc->getElementsByTagName('channel')->item(0);
+$channel_title = $channel->getElementsByTagName('title')
+->item(0)->childNodes->item(0)->nodeValue;
+$channel_link = $channel->getElementsByTagName('link')
+->item(0)->childNodes->item(0)->nodeValue;
+$channel_desc = $channel->getElementsByTagName('description')
+->item(0)->childNodes->item(0)->nodeValue;
+
+
+$x=$xmlDoc->getElementsByTagName('item');
+
+
+for ($i=0; $i<=2; $i++)
+  {
+  $item_title=$x->item($i)->getElementsByTagName('title')
+  ->item(0)->childNodes->item(0)->nodeValue;
+  $item_link=$x->item($i)->getElementsByTagName('link')
+  ->item(0)->childNodes->item(0)->nodeValue;
+  $item_desc=$x->item($i)->getElementsByTagName('description')
+  ->item(0)->childNodes->item(0)->nodeValue;
+  
+  echo ("<li>");
+    echo ("<p><span class='bTxt'>" . $item_title . "</span></p>");
+    echo ("<p>" . $item_desc . "</p>");
+    echo ("<a href='" . $item_link . "' class='contLinksMore' >&#91;Read More&#93;</a></p>");
+  echo ("</li>");
+
+  }
+
+?>
+
+
